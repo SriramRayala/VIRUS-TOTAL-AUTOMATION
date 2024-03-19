@@ -57,20 +57,25 @@ def url_report(arg):
         
         for key in keys_to_remove:
             filtered_response.pop(key, None)
-            
-        df = pd.DataFrame.from_dict(filtered_response, orient="index")
-        df.columns = [target_url]
-        epoch_time = decoded_response["data"]["attributes"]["last_analysis_date"]
-        time_formatted = time.strftime('%c', time.localtime(epoch_time))
-        vt_url_report_link = f"https://www.virustotal.com/gui/url/{url_id}"
-        community_score = decoded_response["data"]["attributes"]["last_analysis_stats"]["malicious"]
-        total_vt_reviewers = sum(decoded_response["data"]["attributes"]["last_analysis_stats"].values())
-        community_score_info = f"{community_score}/{total_vt_reviewers} : security vendors flagged this as malicious"
-        df.loc['virustotal report', :] = vt_url_report_link
-        df.loc['community score', :] = community_score_info
-        df.loc['last_analysis_date', :] = time_formatted
-        df.sort_index(inplace=True)
-        return df
+        
+        # Ensure filtered_response is a dictionary
+        if isinstance(filtered_response, dict):
+            df = pd.DataFrame.from_dict(filtered_response, orient="index")
+            df.columns = [target_url]
+            epoch_time = decoded_response["data"]["attributes"]["last_analysis_date"]
+            time_formatted = time.strftime('%c', time.localtime(epoch_time))
+            vt_url_report_link = f"https://www.virustotal.com/gui/url/{url_id}"
+            community_score = decoded_response["data"]["attributes"]["last_analysis_stats"]["malicious"]
+            total_vt_reviewers = sum(decoded_response["data"]["attributes"]["last_analysis_stats"].values())
+            community_score_info = f"{community_score}/{total_vt_reviewers} : security vendors flagged this as malicious"
+            df.loc['virustotal report', :] = vt_url_report_link
+            df.loc['community score', :] = community_score_info
+            df.loc['last_analysis_date', :] = time_formatted
+            df.sort_index(inplace=True)
+            return df
+        else:
+            print("Error: 'filtered_response' is not a dictionary")
+            return None
     else:
         print("Error: 'data' key not found in response")
         return None
@@ -106,3 +111,4 @@ elif args.version:
     print("VT API v3 IP address and URL analysis 2.0")
 else:
     print("usage: vt-ip-url-analysis.py [-h] [-s SINGLE_ENTRY] [-i IP_LIST] [-u URL_LIST] [-V]")
+
