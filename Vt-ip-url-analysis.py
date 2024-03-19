@@ -24,64 +24,15 @@ def url_report(arg):
     
     # Check if 'data' key exists in the response
     if 'data' in decoded_response:
-        filtered_response = decoded_response["data"]["attributes"]
-        
-        # Rest of the code remains the same
-        keys_to_remove = [
-            "last_http_response_content_sha256", 
-            "last_http_response_code",
-            "last_analysis_results",
-            "last_final_url", 
-            "last_http_response_content_length", 
-            "url", 
-            "last_analysis_date", 
-            "tags", 
-            "last_submission_date", 
-            "threat_names",
-            "last_http_response_headers",
-            "categories",
-            "last_modification_date",
-            "title",
-            "outgoing_links",
-            "first_submission_date",
-            "total_votes",
-            "type",
-            "id",
-            "links",
-            "trackers",
-            "last_http_response_cookies",
-            "html_meta"
-        ]
-        
-        for key in keys_to_remove:
-            filtered_response.pop(key, None)
-        
-        # Ensure filtered_response is a dictionary
-        if isinstance(filtered_response, dict):
-            df = pd.DataFrame.from_dict(filtered_response, orient="index")
-            df.columns = [target_url]
-            epoch_time = decoded_response["data"]["attributes"]["last_analysis_date"]
-            time_formatted = time.strftime('%c', time.localtime(epoch_time))
-            vt_url_report_link = f"https://www.virustotal.com/gui/url/{url_id}"
-            community_score = decoded_response["data"]["attributes"]["last_analysis_stats"]["malicious"]
-            total_vt_reviewers = sum(decoded_response["data"]["attributes"]["last_analysis_stats"].values())
-            community_score_info = f"{community_score}/{total_vt_reviewers} : security vendors flagged this as malicious"
-            df.loc['virustotal report', :] = vt_url_report_link
-            df.loc['community score', :] = community_score_info
-            df.loc['last_analysis_date', :] = time_formatted
-            df.sort_index(inplace=True)
-            return df
-        else:
-            print("Error: 'filtered_response' is not a dictionary")
-            return None
+        return decoded_response
     else:
         print("Error: 'data' key not found in response")
         return None
 
 if args.single_entry:
-    df = url_report(args.single_entry)
-    if df is not None:
-        print(df)
+    response = url_report(args.single_entry)
+    if response is not None:
+        print(json.dumps(response, indent=4))
 elif args.version:
     print("VT API v3 IP address and URL analysis 2.0")
 else:
