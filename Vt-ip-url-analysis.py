@@ -6,6 +6,7 @@ import json
 import base64
 import os
 import hashlib
+from jinja2 import Template
 
 API_KEY = "d803ce098bcaa3286b849de7adea4f1ca086cff3ce5ef7cde537d8462dab69a7"
 
@@ -29,10 +30,22 @@ def url_report(arg):
         print("Error: 'data' key not found in response")
         return None
 
+def generate_html_report(response):
+    with open("template.html", "r") as file:
+        template_content = file.read()
+    
+    template = Template(template_content)
+    html_output = template.render(response=response)
+    
+    with open("report.html", "w") as file:
+        file.write(html_output)
+
 if args.single_entry:
     response = url_report(args.single_entry)
     if response is not None:
         print(json.dumps(response, indent=4))
+        generate_html_report(response)
+        print("HTML report generated successfully.")
 elif args.version:
     print("VT API v3 IP address and URL analysis 2.0")
 else:
