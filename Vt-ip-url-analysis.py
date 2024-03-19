@@ -9,7 +9,7 @@ import hashlib
 
 API_KEY = "d803ce098bcaa3286b849de7adea4f1ca086cff3ce5ef7cde537d8462dab69a7"
 
-parser = argparse.ArgumentParser(description="Python Automated VT API v3 IP address and URL analysis 2.0 by Brett Fullam")
+parser = argparse.ArgumentParser(description="Python Automated VT API v3 IP address and URL analysis 2.0 by Group 16")
 parser.add_argument("-s", "--single-entry", help="ip or url for analysis")
 parser.add_argument("-i", "--ip-list", help="bulk ip address analysis")
 parser.add_argument("-u", "--url-list", help="bulk url analysis")
