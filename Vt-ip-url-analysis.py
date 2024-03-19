@@ -1,11 +1,8 @@
 import argparse
 import time
 import requests
-import pandas as pd
 import json
 import base64
-import os
-import hashlib
 from jinja2 import Template
 
 API_KEY = "d803ce098bcaa3286b849de7adea4f1ca086cff3ce5ef7cde537d8462dab69a7"
@@ -39,15 +36,14 @@ def generate_html_report(response):
     
     with open("report.html", "w") as file:
         file.write(html_output)
+    print("HTML report generated successfully.")
 
 if args.single_entry:
     response = url_report(args.single_entry)
     if response is not None:
         print(json.dumps(response, indent=4))
         generate_html_report(response)
-        print("HTML report generated successfully.")
 elif args.version:
     print("VT API v3 IP address and URL analysis 2.0")
 else:
     print("usage: vt-ip-url-analysis.py [-h] [-s SINGLE_ENTRY] [-V]")
-
