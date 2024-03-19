@@ -11,8 +11,6 @@ API_KEY = "d803ce098bcaa3286b849de7adea4f1ca086cff3ce5ef7cde537d8462dab69a7"
 
 parser = argparse.ArgumentParser(description="Python Automated VT API v3 IP address and URL analysis 2.0 by Brett Fullam")
 parser.add_argument("-s", "--single-entry", help="ip or url for analysis")
-parser.add_argument("-i", "--ip-list", help="bulk ip address analysis")
-parser.add_argument("-u", "--url-list", help="bulk url analysis")
 parser.add_argument("-V", "--version", help="show program version", action="store_true")
 args = parser.parse_args()
 
@@ -80,35 +78,12 @@ def url_report(arg):
         print("Error: 'data' key not found in response")
         return None
 
-
-def url_report_lst(arg):
-    with open(arg) as f:
-        lines = f.readlines()
-    urls = [line.strip() for line in lines if line.strip()]
-    for url in urls:
-        df = url_report(url)
-        if df is not None:
-            print(df, "\n")
-
-def url_report_ip_lst(arg):
-    with open(arg) as f:
-        lines = f.readlines()
-    ips = [line.strip() for line in lines if line.strip()]
-    for ip in ips:
-        df = url_report(ip)
-        if df is not None:
-            print(df, "\n")
-
 if args.single_entry:
     df = url_report(args.single_entry)
     if df is not None:
         print(df)
-elif args.ip_list:
-    url_report_ip_lst(args.ip_list)
-elif args.url_list:
-    url_report_lst(args.url_list)
 elif args.version:
     print("VT API v3 IP address and URL analysis 2.0")
 else:
-    print("usage: vt-ip-url-analysis.py [-h] [-s SINGLE_ENTRY] [-i IP_LIST] [-u URL_LIST] [-V]")
+    print("usage: vt-ip-url-analysis.py [-h] [-s SINGLE_ENTRY] [-V]")
 
