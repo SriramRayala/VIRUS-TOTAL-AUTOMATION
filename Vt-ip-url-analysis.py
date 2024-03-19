@@ -22,8 +22,7 @@ def url_report(arg):
     url = f"https://www.virustotal.com/api/v3/urls/{url_id}"
     headers = {"Accept": "application/json", "x-apikey": API_KEY}
     response = requests.get(url, headers=headers)
-    decoded_response = response.json()  # Convert response to JSON
-    timestamp = time.strftime('%c', time.localtime(time.time()))
+    decoded_response = response.json()
     
     # Check if 'data' key exists in the response
     if 'data' in decoded_response:
@@ -59,7 +58,8 @@ def url_report_lst(arg):
     urls = [line.strip() for line in lines if line.strip()]
     for url in urls:
         df = url_report(url)
-        print(df, "\n")
+        if df is not None:
+            print(df, "\n")
 
 def url_report_ip_lst(arg):
     with open(arg) as f:
@@ -67,11 +67,13 @@ def url_report_ip_lst(arg):
     ips = [line.strip() for line in lines if line.strip()]
     for ip in ips:
         df = url_report(ip)
-        print(df, "\n")
+        if df is not None:
+            print(df, "\n")
 
 if args.single_entry:
     df = url_report(args.single_entry)
-    print(df)
+    if df is not None:
+        print(df)
 elif args.ip_list:
     url_report_ip_lst(args.ip_list)
 elif args.url_list:
